@@ -4,6 +4,12 @@
       var defaults = {
          // Array of events
          events : [],
+         // Default properties for events
+         begin : "begin",
+         end : "end",
+         summary : "summary",
+         // Theme
+         theme : "c",
          // Date variable to determine which month to show and which date to select
          date : new Date(),
          // Array of month strings (calendar header)
@@ -15,7 +21,7 @@
          // [TODO]
          hideWeekends : false,
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
-         startOfWeek : 0,   
+         startOfWeek : 0
       }
 
       var plugin = this;
@@ -35,7 +41,7 @@
          // Build the header
          var $thead = $("<thead/>").appendTo($table),
             $tr = $("<tr/>").appendTo($thead),
-            $th = $("<th class='ui-bar-c header' colspan='7'/>");
+            $th = $("<th class='ui-bar-" + plugin.settings.theme + " header' colspan='7'/>");
          
          $previous = $("<a href='#' data-role='button' data-icon='arrow-l' data-iconpos='notext' class='previous-btn'>Previous</a>").click(function(event) {
             refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() - 1, plugin.settings.date.getDate()));
@@ -53,7 +59,7 @@
          
          // The way of determing the labels for the days is a bit awkward, but works.
          for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
-            $tr.append("<th class='ui-bar-c'><span class='hidden'>"  + days[i] + "</span></th>");
+            $tr.append("<th class='ui-bar-" + plugin.settings.theme + "'><span class='hidden'>"  + days[i] + "</span></th>");
          }
          
          $tbody = $("<tbody/>").appendTo($table);
@@ -93,24 +99,34 @@
       }
       
       function addCell($row, date, hidden, selected) {
-         var $td = $("<td class='ui-body-c' />").appendTo($row);
-         if ( hidden ) $td.addClass("hidden");
-         var $a = $("<a href='#' class='ui-btn ui-btn-up-c'/>")
+         var $td = $("<td class='ui-body-" + plugin.settings.theme + "'/>").appendTo($row),
+             $a = $("<a href='#' class='ui-btn ui-btn-up-" + plugin.settings.theme + "'/>")
                   .html(date.getDate().toString())
                   .data('date', date)
                   .click(cellClickHandler)
                   .appendTo($td);
+
          if ( selected ) $a.click();
-         if ( ! hidden ) {
-            for (    var   i = 0,
-                     event,
-                     begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
-                     end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
+         
+         if ( hidden ) {
+             $td.addClass("hidden");
+         } else {
+            var importance = 0;
+            
+            // Find events for this date
+            for ( var i = 0,
+                      event,
+                      begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
+                      end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
                   event = plugin.settings.events[i]; i++ ) {
-               if ( event.end > begin && event.begin < end ) {
-                  $a.append("<span>&bull;</span>");
-                  break;
+               if ( event[plugin.settings.end] > begin && event[plugin.settings.begin] < end ) {
+                  importance++;
+                  if ( importance > 2 ) break;
                }
+            }
+            
+            if ( importance > 0 ) {
+                $a.append("<span>&bull;</span>").addClass("importance-" + importance.toString() );
             }
          }
       }
@@ -183,11 +199,11 @@
 
          // Find events for this date
          for ( var   i = 0, event; event = plugin.settings.events[i]; i++ ) {
-            if ( event.end > begin && event.begin < end ) {
+            if ( event[plugin.settings.end] > begin && event[plugin.settings.begin] < end ) {
                // Append matches to list
-               var summary    = event["summary"],
-                  beginTime   = event["begin"].toTimeString().substr(0,5),
-                  endTime      = event["end"].toTimeString().substr(0,5),
+               var summary    = event[plugin.settings.summary],
+                  beginTime   = event[plugin.settings.begin].toTimeString().substr(0,5),
+                  endTime      = event[plugin.settings.end].toTimeString().substr(0,5),
                   timeString   = beginTime + "-" + endTime;
                $("<li>" + ( ( timeString != "00:00-00:00" ) ? timeString : "" ) + " " + summary + "</li>").appendTo($listview);   
             }
@@ -204,13 +220,11 @@
    }
 
    $.fn.jqmCalendar = function(options) {
-
       return this.each(function() {
          if (undefined == $(this).data('jqmCalendar')) {
             var plugin = new $.jqmCalendar(this, options);
          }
       });
-
    }
 
 })(jQuery);
