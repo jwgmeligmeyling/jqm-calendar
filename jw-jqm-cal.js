@@ -2,19 +2,19 @@
    $.jqmCalendar = function(element, options) {
       
       var defaults = {
-		 // Array of events
+         // Array of events
          events : [],
-		 // Date variable to determine which month to show and which date to select
+         // Date variable to determine which month to show and which date to select
          date : new Date(),
-		 // Array of month strings (calendar header)
+         // Array of month strings (calendar header)
          months : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-		 // Array of day strings (calendar header)
+         // Array of day strings (calendar header)
          days : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-		 // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
+         // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
          weeksInMonth : undefined,
-		 // [TODO]
+         // [TODO]
          hideWeekends : false,
-		 // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
+         // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
          startOfWeek : 0,   
       }
 
@@ -32,7 +32,7 @@
          plugin.settings = $.extend({}, defaults, options);
          $table = $("<table/>");
          
-		 // Build the header
+         // Build the header
          var $thead = $("<thead/>").appendTo($table),
             $tr = $("<tr/>").appendTo($thead),
             $th = $("<th class='ui-bar-c header' colspan='7'/>");
@@ -51,17 +51,17 @@
          
          $tr = $("<tr/>").appendTo($thead);
          
-		 // The way of determing the labels for the days is a bit awkward, but works.
+         // The way of determing the labels for the days is a bit awkward, but works.
          for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
-            $tr.append("<th class='ui-bar-c'><span class='hidden'>"  + days[i] + "</span></th>");
+            $tr.append("<th class='ui-bar-c'><span class='hidden'>"  + days[i] + "</span>");
          }
          
          $tbody = $("<tbody/>").appendTo($table);
          
          $table.appendTo($element);
          $listview = $("<ul data-role='listview'/>").insertAfter($table);
-		 
-		 // Call refresh to fill the calendar with dates
+         
+         // Call refresh to fill the calendar with dates
          refresh(plugin.settings.date);      
       }
       
@@ -122,7 +122,7 @@
          $this.addClass("ui-btn-active");
          
          if ( date.getMonth() !== plugin.settings.date.getMonth() ) {
-		    // Go to previous/next month
+            // Go to previous/next month
             refresh(date);
          } else {
             // Select new date
@@ -139,9 +139,9 @@
             daysInMonth = _daysInMonth(date),
             weeksInMonth = _weeksInMonth(date, daysInMonth, daysBefore);
          
-		 // Empty the table body, we start all over...
+         // Empty the table body, we start all over...
          $tbody.empty();
-		 // Change the header to match the current month
+         // Change the header to match the current month
          $header.html( plugin.settings.months[month] + " " + year.toString() );
       
          for (    var   weekIndex = 0,
@@ -151,21 +151,21 @@
             var daysInWeekCount = 0,
                row = $("<tr/>").appendTo($tbody);
             
-		    // Previous month
+            // Previous month
             while ( daysBefore > 0 ) {
                addCell(row, new Date(year, month, 1 - daysBefore), true);
                daysBefore--;
                daysInWeekCount++;
             }
             
-		    // Current month
+            // Current month
             while ( daysInWeekCount < 7 && daysInMonthCount <= daysInMonth ) {
                addCell(row, new Date(year, month, daysInMonthCount), false, daysInMonthCount === date.getDate() );
                daysInWeekCount++;
                daysInMonthCount++;
             }
             
-		    // Next month
+            // Next month
             while ( daysInMonthCount > daysInMonth && daysInWeekCount < 7 ) {
                addCell(row, new Date(year, month, daysInMonth + daysAfterCount), true);
                daysInWeekCount++;
