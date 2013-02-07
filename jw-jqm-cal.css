@@ -9,5 +9,5 @@
 .jq-calendar-wrapper .next-btn { float: right; margin: 0 .5em; }
 .jq-calendar-wrapper td { position: relative; text-align:center; width: 14.28571428571429%; }
 .jq-calendar-wrapper td.hidden, .jq-calendar-wrapper span.hidden { opacity: 0.3; }
-.jq-calendar-wrapper td a { padding: .5em 0; margin:0; border:0; }
-.jq-calendar-wrapper td span { position: absolute; top: 20px; left : 50%; }
+.jq-calendar-wrapper td a { padding: .5em 0; margin:-1px; border:0; }
+.jq-calendar-wrapper td span { position: absolute; top: 20px; left: 0; width: 100%; text-align: center; }
