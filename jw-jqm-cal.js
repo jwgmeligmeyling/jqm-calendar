@@ -202,9 +202,9 @@
             if ( event[plugin.settings.end] > begin && event[plugin.settings.begin] < end ) {
                // Append matches to list
                var summary    = event[plugin.settings.summary],
-                  beginTime   = event[plugin.settings.begin].toTimeString().substr(0,5),
-                  endTime      = event[plugin.settings.end].toTimeString().substr(0,5),
-                  timeString   = beginTime + "-" + endTime;
+                   beginTime  = (( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5),
+                   endTime    = (( event[plugin.settings.end] < end ) ? event[plugin.settings.end] : end ).toTimeString().substr(0,5),
+                   timeString = beginTime + "-" + endTime;
                $("<li>" + ( ( timeString != "00:00-00:00" ) ? timeString : "" ) + " " + summary + "</li>").appendTo($listview);   
             }
          }
