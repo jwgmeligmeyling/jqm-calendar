@@ -2,6 +2,7 @@
 /* CSS Document */
 
 table.jw-jqm-table { margin: 0; width: 100%; color: #333; font-family: Helvetica, Arial, sans-serif; table; border-spacing: 2px; border-color: gray; border-collapse: collapse; }
+table.jw-jqm-table th, table.jw-jqm-table td { width: 14.28571428571429%; }
 table.jw-jqm-table th { padding: .3em 0; } 
 table.jw-jqm-table th.header { padding: .5em 0; line-height: 25px; }
 .previous-btn { float: left; margin: 0 .5em; }

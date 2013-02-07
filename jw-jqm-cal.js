@@ -119,16 +119,14 @@
       }
       
       function refresh(date) {
-         date = date || new Date();
-         plugin.settings.date = date;
+         plugin.settings.date = date = date ||  plugin.settings.date || new Date();
                   
          var year = date.getFullYear(),
             month = date.getMonth(),
             firstDayOfMonth = _firstDayOfMonth(date),
             daysBefore = _daysBefore(date, firstDayOfMonth),
             daysInMonth = _daysInMonth(date),
-            weeksInMonth = _weeksInMonth(date, daysInMonth, daysBefore),         // Prevent the same functions being called twice
-            daysAfter = _daysAfter(date, weeksInMonth, daysInMonth, daysBefore);   // Prevent the same functions being called twice
+            weeksInMonth = _weeksInMonth(date, daysInMonth, daysBefore);
          
          $tbody.empty(); 
          $header.html( plugin.settings.months[month] + " " + year.toString() );
@@ -152,7 +150,7 @@
                daysInMonthCount++;
             }
             
-            while ( daysInMonthCount > daysInMonth && daysInWeekCount < 7 && daysAfterCount <= daysAfter ) {
+            while ( daysInMonthCount > daysInMonth && daysInWeekCount < 7 ) {
                addCell(row, new Date(year, month, daysInMonth + daysAfterCount), true);
                daysInWeekCount++;
                daysAfterCount++;
