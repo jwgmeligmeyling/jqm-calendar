@@ -53,7 +53,7 @@
          
          // The way of determing the labels for the days is a bit awkward, but works.
          for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
-            $tr.append("<th class='ui-bar-c'><span class='hidden'>"  + days[i] + "</span>");
+            $tr.append("<th class='ui-bar-c'><span class='hidden'>"  + days[i] + "</span></th>");
          }
          
          $tbody = $("<tbody/>").appendTo($table);
