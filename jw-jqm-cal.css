@@ -1,13 +1,13 @@
 @charset "utf-8";
 /* CSS Document */
-
-table.jw-jqm-table { margin: 0; width: 100%; color: #333; font-family: Helvetica, Arial, sans-serif; table; border-spacing: 2px; border-color: gray; border-collapse: collapse; }
-table.jw-jqm-table th, table.jw-jqm-table td { width: 14.28571428571429%; }
-table.jw-jqm-table th { padding: .3em 0; } 
-table.jw-jqm-table th.header { padding: .5em 0; line-height: 25px; }
-.previous-btn { float: left; margin: 0 .5em; }
-.next-btn { float: right; margin: 0 .5em; }
-table.jw-jqm-table td { position: relative; text-align:center; }
-table.jw-jqm-table td.hidden, table.jw-jqm-table span.hidden { opacity: 0.3; }
-table.jw-jqm-table td a { padding: .5em 0; margin:0; border:0; }
-table.jw-jqm-table td span { position: absolute; top: 20px; left : 50%; }
+.jq-calendar-wrapper { padding: 0; margin:-15px; }
+.jq-calendar-wrapper table { margin:0; width: 100%; color: #333; font-family: Helvetica, Arial, sans-serif; table; border-spacing: 2px; border-color: gray; border-collapse: collapse; }
+.jq-calendar-wrapper .ui-listview { margin: 0 0 1px 0; }
+.jq-calendar-wrapper th { padding: .3em 0; width: 14.28571428571429%; } 
+.jq-calendar-wrapper th.header { padding: .5em 0; line-height: 25px; }
+.jq-calendar-wrapper .previous-btn { float: left; margin: 0 .5em; }
+.jq-calendar-wrapper .next-btn { float: right; margin: 0 .5em; }
+.jq-calendar-wrapper td { position: relative; text-align:center; width: 14.28571428571429%; }
+.jq-calendar-wrapper td.hidden, .jq-calendar-wrapper span.hidden { opacity: 0.3; }
+.jq-calendar-wrapper td a { padding: .5em 0; margin:0; border:0; }
+.jq-calendar-wrapper td span { position: absolute; top: 20px; left : 50%; }
