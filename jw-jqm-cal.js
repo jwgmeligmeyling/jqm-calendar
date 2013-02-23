@@ -18,8 +18,6 @@
          days : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
          // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
          weeksInMonth : undefined,
-         // [TODO]
-         hideWeekends : false,
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
          startOfWeek : 0
       }
@@ -80,7 +78,7 @@
           // Returns [0-6], 0 when firstDayOfMonth is equal to startOfWeek, else the amount of days of the previous month included in the week.
          var firstDayInMonth = ( fim || _firstDayOfMonth(date) ),
              diff = firstDayInMonth - plugin.settings.startOfWeek;
-         return ( diff === 0 ) ? 7 : (( diff > 0 ) ? diff : ( 7 + diff ));
+         return ( diff > 0 ) ? diff : ( 7 + diff );
       }
       
       function _daysInMonth(date) {
