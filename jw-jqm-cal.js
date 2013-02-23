@@ -77,10 +77,10 @@
       }
       
       function _daysBefore(date, fim) {
-         // Returns [0-6], 0 when firstDayOfMonth is equal to startOfWeek, else the amount of days of the previous month included in the week.
+          // Returns [0-6], 0 when firstDayOfMonth is equal to startOfWeek, else the amount of days of the previous month included in the week.
          var firstDayInMonth = ( fim || _firstDayOfMonth(date) ),
-            diff = firstDayInMonth - plugin.settings.startOfWeek;
-         return ( diff >= 0 ) ? diff : ( 7 + diff );
+             diff = firstDayInMonth - plugin.settings.startOfWeek;
+         return ( diff === 0 ) ? 7 : (( diff > 0 ) ? diff : ( 7 + diff ));
       }
       
       function _daysInMonth(date) {
@@ -153,7 +153,10 @@
             month = date.getMonth(),
             daysBefore = _daysBefore(date),
             daysInMonth = _daysInMonth(date),
-            weeksInMonth = _weeksInMonth(date, daysInMonth, daysBefore);
+            weeksInMonth = plugin.settings.weeksInMonth || _weeksInMonth(date, daysInMonth, daysBefore);
+
+         if (((daysInMonth + daysBefore) / 7 ) - weeksInMonth === 0)
+             weeksInMonth++;
          
          // Empty the table body, we start all over...
          $tbody.empty();
@@ -221,8 +224,8 @@
 
    $.fn.jqmCalendar = function(options) {
       return this.each(function() {
-         if (undefined == $(this).data('jqmCalendar')) {
-            var plugin = new $.jqmCalendar(this, options);
+         if (!$(this).data('jqmCalendar')) {
+             $(this).data('jqmCalendar', new $.jqmCalendar(this, options));
          }
       });
    }
