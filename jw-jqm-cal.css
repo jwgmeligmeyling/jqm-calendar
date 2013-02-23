@@ -1,10 +1,10 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 .jq-calendar-wrapper { padding: 0; margin:-15px; }
 .jq-calendar-wrapper table { margin:0; width: 100%; color: #333; font-family: Helvetica, Arial, sans-serif; table; border-spacing: 2px; border-color: gray; border-collapse: collapse; }
 .jq-calendar-wrapper .ui-listview { margin: 0 0 1px 0; }
-.jq-calendar-wrapper th { padding: .3em 0; width: 14.28571428571429%; } 
-.jq-calendar-wrapper th.header { padding: .5em 0; line-height: 33px; }
+.jq-calendar-wrapper th { padding: .2em 0; width: 14.28571428571429%; } 
+.jq-calendar-wrapper th.header { padding: 0.2em 0; line-height: 33px; }
 .jq-calendar-wrapper .previous-btn { float: left; margin: .2em .5em; }
 .jq-calendar-wrapper .next-btn { float: right; margin: .2em .5em; }
 .jq-calendar-wrapper td { position: relative; text-align:center; width: 14.28571428571429%; }
