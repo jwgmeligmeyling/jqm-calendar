@@ -34,6 +34,8 @@
 
       function init() {
          plugin.settings = $.extend({}, defaults, options);
+         plugin.settings.theme = $.mobile.getInheritedTheme($element, plugin.settings.theme);
+         
          $table = $("<table/>");
          
          // Build the header
@@ -206,7 +208,7 @@
                    beginTime  = (( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5),
                    endTime    = (( event[plugin.settings.end] < end ) ? event[plugin.settings.end] : end ).toTimeString().substr(0,5),
                    timeString = beginTime + "-" + endTime;
-               $("<li>" + ( ( timeString != "00:00-00:00" ) ? timeString : "" ) + " " + summary + "</li>").appendTo($listview);   
+               $("<li>" + ( ( timeString != "00:00-00:00" ) ? timeString : "" ) + " " + summary + "</li>").appendTo($listview);
             }
          }
 
