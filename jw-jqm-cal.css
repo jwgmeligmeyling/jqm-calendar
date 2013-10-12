@@ -3,7 +3,7 @@
 .jq-calendar-wrapper { padding: 0; margin: -15px -15px 0 -15px; display: block; }
 .jq-calendar-wrapper table { margin:0; width: 100%; color: #333; border-collapse: collapse; table-layout: fixed; }
 .jq-calendar-wrapper .ui-listview { margin: 0; }
-.jq-calendar-wrapper th { padding: .2em 0; } 
+.jq-calendar-wrapper th { padding: .2em 0;  text-align: center; } 
 .jq-calendar-wrapper th.header { line-height: 33px; }
 .jq-calendar-wrapper .previous-btn { float: left; margin: .2em .5em; }
 .jq-calendar-wrapper .next-btn { float: right; margin: .2em .5em; }
