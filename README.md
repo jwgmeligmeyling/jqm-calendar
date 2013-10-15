@@ -11,6 +11,7 @@ $("#calendar").jqmCalendar({
    startOfWeek : 0
 }); 
 ```
+(PLease note that all properties of the settings objects are optional, and the values above, except for the events, are defaults!)
 
 Listen to changes via the event:
 ```js
