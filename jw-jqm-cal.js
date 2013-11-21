@@ -8,6 +8,8 @@
          begin : "begin",
          end : "end",
          summary : "summary",
+         icon: "icon",
+         url: "url",
          // Theme
          theme : "c",
          // Date variable to determine which month to show and which date to select
@@ -22,6 +24,8 @@
          weeksInMonth : undefined,
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
          startOfWeek : 0
+         // List Item formatter, allows a callback to be passed to alter the contect of the list item
+         listItemFormatter : listItemFormatter
       }
 
       var plugin = this;
@@ -203,19 +207,35 @@
          $listview.empty();
 
          // Find events for this date
-         for ( var   i = 0, event; event = plugin.settings.events[i]; i++ ) {
-            if ( event[plugin.settings.end] > begin && event[plugin.settings.begin] < end ) {
+         for ( var i = 0, event; event = plugin.settings.events[i]; i++ ) {
+            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] <= end ) {
                // Append matches to list
                var summary    = event[plugin.settings.summary],
                    beginTime  = (( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5),
                    endTime    = (( event[plugin.settings.end] < end ) ? event[plugin.settings.end] : end ).toTimeString().substr(0,5),
-                   timeString = beginTime + "-" + endTime;
-               $("<li>" + ( ( timeString != "00:00-00:00" ) ? timeString : "" ) + " " + summary + "</li>").appendTo($listview);
+                   timeString = beginTime + "-" + endTime,
+                   $listItem  = $("<li></li>").appendTo($listview);
+                   
+               plugin.settings.listItemFormatter( $listItem, timeString, summary, event );   
+
             }
          }
 
          $listview.trigger('create').filter(".ui-listview").listview('refresh');
       });
+      
+      function listItemFormatter($listItem, timeString, summary, event) {
+         var text = ( ( timeString != "00:00-00:00" ) ? timeString : "" ) + " " + summary;
+         if (event[plugin.settings.icon]) {
+            item.attr('data-icon', event.icon);
+         }
+         if (event[plugin.settings.url]) {
+            $('<a></a>').text( text ).attr( 'href', event[plugin.settings.url] ).appendTo($listItem);
+         } else {
+            $listItem.text( text );
+         }
+         
+      }
       
       $element.bind('refresh', function(event, date) {
          refresh(date);
