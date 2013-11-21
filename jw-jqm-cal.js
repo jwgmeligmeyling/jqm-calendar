@@ -74,9 +74,6 @@
          
          $table.appendTo($element);
          $listview = $("<ul data-role='listview'/>").insertAfter($table);
-
-         // Stort the events
-         plugin.settings.events.sort(function(a,b) {return a.start_date.getTime()-b.start_date.getTime()} );
          
          // Call refresh to fill the calendar with dates
          refresh(plugin.settings.date);      
@@ -207,7 +204,7 @@
       }
 
       $element.bind('change', function(event, begin) {
-         var end = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate() + 1, 0,0,0,0), daysEvents = [];
+         var end = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate() + 1, 0,0,0,0);
          // Empty the list
          $listview.empty();
 
@@ -221,9 +218,8 @@
                    timeString = beginTime + "-" + endTime,
                    $listItem  = $("<li></li>").appendTo($listview);
                    
-               plugin.settings.listItemFormatter( $listItem, timeString, summary, event );   
+               plugin.settings.listItemFormatter( $listItem, timeString, summary, event );
                
-               daysEvents.push($listItem);
             }
          }
          
