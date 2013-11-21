@@ -10,6 +10,8 @@
          summary : "summary",
          icon: "icon",
          url: "url",
+         // Sting to use when event is all day
+         allDayTimeString: '',
          // Theme
          theme : "c",
          // Date variable to determine which month to show and which date to select
@@ -23,7 +25,7 @@
          // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
          weeksInMonth : undefined,
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
-         startOfWeek : 0
+         startOfWeek : 0,
          // List Item formatter, allows a callback to be passed to alter the contect of the list item
          listItemFormatter : listItemFormatter
       }
@@ -72,6 +74,9 @@
          
          $table.appendTo($element);
          $listview = $("<ul data-role='listview'/>").insertAfter($table);
+
+         // Stort the events
+         plugin.settings.events.sort(function(a,b) {return a.start_date.getTime()-b.start_date.getTime()} );
          
          // Call refresh to fill the calendar with dates
          refresh(plugin.settings.date);      
@@ -125,7 +130,7 @@
                       begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
                       end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
                   event = plugin.settings.events[i]; i++ ) {
-               if ( event[plugin.settings.end] > begin && event[plugin.settings.begin] < end ) {
+               if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
                   importance++;
                   if ( importance > 2 ) break;
                }
@@ -202,13 +207,13 @@
       }
 
       $element.bind('change', function(event, begin) {
-         var end = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate() + 1, 0,0,0,0);
+         var end = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate() + 1, 0,0,0,0), daysEvents = [];
          // Empty the list
          $listview.empty();
 
          // Find events for this date
          for ( var i = 0, event; event = plugin.settings.events[i]; i++ ) {
-            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] <= end ) {
+            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
                // Append matches to list
                var summary    = event[plugin.settings.summary],
                    beginTime  = (( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5),
@@ -217,17 +222,18 @@
                    $listItem  = $("<li></li>").appendTo($listview);
                    
                plugin.settings.listItemFormatter( $listItem, timeString, summary, event );   
-
+               
+               daysEvents.push($listItem);
             }
          }
-
+         
          $listview.trigger('create').filter(".ui-listview").listview('refresh');
       });
       
       function listItemFormatter($listItem, timeString, summary, event) {
-         var text = ( ( timeString != "00:00-00:00" ) ? timeString : "" ) + " " + summary;
+         var text = ( ( timeString != "00:00-00:00" ) ? timeString : plugin.settings.allDayTimeString ) + " " + summary;
          if (event[plugin.settings.icon]) {
-            item.attr('data-icon', event.icon);
+            $listItem.attr('data-icon', event.icon);
          }
          if (event[plugin.settings.url]) {
             $('<a></a>').text( text ).attr( 'href', event[plugin.settings.url] ).appendTo($listItem);
