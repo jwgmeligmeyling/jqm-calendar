@@ -67,7 +67,7 @@
          
          // The way of determing the labels for the days is a bit awkward, but works.
          for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
-            $tr.append("<th class='ui-bar-" + plugin.settings.theme + "'><span class='hidden'>"  + days[i] + "</span></th>");
+            $tr.append("<th class='ui-bar-" + plugin.settings.theme + "'><span class='darker'>"  + days[i] + "</span></th>");
          }
          
          $tbody = $("<tbody/>").appendTo($table);
@@ -106,7 +106,7 @@
          return ( plugin.settings.weeksInMonth ) ? plugin.settings.weeksInMonth : Math.ceil( ( ( dim || _daysInMonth(date) ) + ( db || _daysBefore(date)) ) / 7 );
       }
       
-      function addCell($row, date, hidden, selected) {
+      function addCell($row, date, darker, selected) {
          var $td = $("<td class='ui-body-" + plugin.settings.theme + "'/>").appendTo($row),
              $a = $("<a href='#' class='ui-btn ui-btn-up-" + plugin.settings.theme + "'/>")
                   .html(date.getDate().toString())
@@ -116,8 +116,8 @@
 
          if ( selected ) $a.click();
          
-         if ( hidden ) {
-             $td.addClass("hidden");
+         if ( darker ) {
+             $td.addClass("darker");
          } else {
             var importance = 0;
             

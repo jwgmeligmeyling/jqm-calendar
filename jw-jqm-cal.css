@@ -8,7 +8,7 @@
 .jq-calendar-wrapper .previous-btn { float: left; margin: .2em .5em; }
 .jq-calendar-wrapper .next-btn { float: right; margin: .2em .5em; }
 .jq-calendar-wrapper td { text-align:center; padding: 0;  }
-.jq-calendar-wrapper td.hidden, .jq-calendar-wrapper span.hidden { opacity: 0.3; }
+.jq-calendar-wrapper td.darker, .jq-calendar-wrapper span.darker { opacity: 0.3; }
 .jq-calendar-wrapper td a { padding: .5em 0; margin:0; border:0; }
 .jq-calendar-wrapper td span { position: absolute; top: 20px; left: 0; width: 100%; text-align: center; }
 .jq-calendar-wrapper .importance-1:not(.ui-btn-active) { background-image: -webkit-gradient(linear, left top, left bottom, from( #FFFFc7   ), to( #d3c190  )); background-image: -webkit-linear-gradient( #FFFFc7, #d3c190  ); background-image: -moz-linear-gradient( #FFFFc7 , #d3c190  ); background-image: -ms-linear-gradient( #FFFFc7 , #d3c190  ); background-image: -o-linear-gradient( #FFFFc7 , #d3c190  ); background-image: linear-gradient( #FFFFc7 , #d3c190  ); }
