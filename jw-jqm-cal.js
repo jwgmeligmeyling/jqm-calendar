@@ -17,7 +17,7 @@
          // Date variable to determine which month to show and which date to select
          date : new Date(),
          // Version
-         version: "1.0.0",
+         version: "1.0.1",
          // Array of month strings (calendar header)
          months : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
          // Array of day strings (calendar header)
