@@ -30,7 +30,8 @@
          listItemFormatter : listItemFormatter
       }
 
-      var plugin = this;
+      var plugin = this,
+          today = new Date();
       plugin.settings = null;
 
       var $element = $(element).addClass("jq-calendar-wrapper"),
@@ -118,24 +119,32 @@
          
          if ( darker ) {
              $td.addClass("darker");
+         }
+         
+         var importance = 0;
+            
+         // Find events for this date
+         for ( var i = 0,
+                   event,
+                   begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
+                   end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
+               event = plugin.settings.events[i]; i++ ) {
+            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
+               importance++;
+               if ( importance > 1 ) break;
+            }
+         }
+            
+         if ( importance > 0 ) {
+             $a.append("<span>&bull;</span>");
+         }
+         
+         if ( date.getFullYear() === today.getFullYear() &&
+        	  date.getMonth() === today.getMonth() &&
+        	  date.getDate() === today.getDate() ) {
+        	 $a.addClass("ui-btn-today");
          } else {
-            var importance = 0;
-            
-            // Find events for this date
-            for ( var i = 0,
-                      event,
-                      begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
-                      end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
-                  event = plugin.settings.events[i]; i++ ) {
-               if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
-                  importance++;
-                  if ( importance > 2 ) break;
-               }
-            }
-            
-            if ( importance > 0 ) {
-                $a.append("<span>&bull;</span>").addClass("importance-" + importance.toString() );
-            }
+        	 $a.addClass("importance-" + importance.toString());
          }
       }
       
