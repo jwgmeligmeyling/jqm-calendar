@@ -28,14 +28,13 @@
          startOfWeek : 0,
          // List Item formatter, allows a callback to be passed to alter the contect of the list item
          listItemFormatter : listItemFormatter
-      }
+      };
 
       var plugin = this,
           today = new Date();
       plugin.settings = null;
 
       var $element = $(element).addClass("jq-calendar-wrapper"),
-          element = element,
           $table,
           $header,
           $tbody,
@@ -52,13 +51,13 @@
             $tr = $("<tr/>").appendTo($thead),
             $th = $("<th class='ui-bar-" + plugin.settings.theme + " header' colspan='7'/>");
          
-         $previous = $("<a href='#' data-role='button' data-icon='arrow-l' data-iconpos='notext' class='previous-btn'>Previous</a>").click(function(event) {
+         $("<a href='#' data-role='button' data-icon='arrow-l' data-iconpos='notext' class='previous-btn'>Previous</a>").click(function() {
             refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() - 1, plugin.settings.date.getDate()));
          }).appendTo($th);
          
          $header = $("<span/>").appendTo($th);
          
-         $previous = $("<a href='#' data-role='button' data-icon='arrow-r' data-iconpos='notext' class='next-btn'>Next</a>").click(function(event) {
+         $("<a href='#' data-role='button' data-icon='arrow-r' data-iconpos='notext' class='next-btn'>Next</a>").click(function() {
             refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() + 1, plugin.settings.date.getDate()));
          }).appendTo($th);
          
@@ -95,11 +94,6 @@
       function _daysInMonth(date) {
          // [1-31]
          return ( new Date ( date.getFullYear(), date.getMonth() + 1, 0 )).getDate();
-      }
-
-      function _daysAfter(date, wim, dim, db) {
-         // Returns [0-6] amount of days from the next month
-         return    (( wim || _weeksInMonth(date) ) * 7 ) - ( dim || _daysInMonth(date) ) - ( db || _daysBefore(date));
       }
             
       function _weeksInMonth(date, dim, db) {
@@ -148,7 +142,7 @@
          }
       }
       
-      function cellClickHandler(event) {
+      function cellClickHandler() {
          var $this = $(this),
             date = $this.data('date');
          $tbody.find("a.ui-btn-active").removeClass("ui-btn-active");
@@ -212,7 +206,7 @@
          $element.trigger('create');
       }
 
-      $element.bind('change', function(event, begin) {
+      $element.bind('change', function(originalEvent, begin) {
          var end = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate() + 1, 0,0,0,0);
          // Empty the list
          $listview.empty();
@@ -253,7 +247,7 @@
       });
 
       init();
-   }
+   };
 
    $.fn.jqmCalendar = function(options) {
       return this.each(function() {
