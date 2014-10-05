@@ -4,6 +4,16 @@
       var defaults = {
          // Array of events
          events : [],
+         // Event handler,
+         eventHandler : {
+           // getImportanceOfDay (date, callback).  callback should be called
+           // with importance as an argument. Currently, 0 (no events), 1 (e.g.
+           // one event) and 2 (more than one event) are supported.
+           getImportanceOfDay : getImportanceOfDay,
+           // getEventOnDay (begin, end, callback).  callback should be called
+           // with the list of events
+           getEventsOnDay : getEventsOnDay
+         },
          // Default properties for events
          begin : "begin",
          end : "end",
@@ -101,6 +111,37 @@
          return ( plugin.settings.weeksInMonth ) ? plugin.settings.weeksInMonth : Math.ceil( ( ( dim || _daysInMonth(date) ) + ( db || _daysBefore(date)) ) / 7 );
       }
       
+      function getImportanceOfDay(date, callback) {
+         var importance = 0;
+
+         // Find events for this date
+         for ( var i = 0,
+                   event,
+                   begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
+                   end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
+               event = plugin.settings.events[i]; i++ ) {
+            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
+               importance++;
+               if ( importance > 1 ) break;
+            }
+         }
+         callback(importance);
+      }
+      
+      function getEventsOnDay(begin, end, callback) {
+         // Find events for this date
+         // Callback is called for each event and once at the end without an event. 
+         var ret_list = [];
+         for ( var i = 0, event; event = plugin.settings.events[i]; i++ ) {
+            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
+               // Append matches to list
+               ret_list[ret_list.length] = event;
+            }
+         }
+         // Callback one more time to handle any cleanup.
+         callback(ret_list);
+      }
+
       function addCell($row, date, darker, selected) {
          var $td = $("<td class='ui-body-" + plugin.settings.theme + "'/>").appendTo($row),
              $a = $("<a href='#' class='ui-btn ui-btn-up-" + plugin.settings.theme + "'/>")
@@ -114,32 +155,21 @@
          if ( darker ) {
              $td.addClass("darker");
          }
-         
-         var importance = 0;
-            
-         // Find events for this date
-         for ( var i = 0,
-                   event,
-                   begin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
-                   end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
-               event = plugin.settings.events[i]; i++ ) {
-            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
-               importance++;
-               if ( importance > 1 ) break;
-            }
-         }
-            
-         if ( importance > 0 ) {
-             $a.append("<span>&bull;</span>");
-         }
-         
-         if ( date.getFullYear() === today.getFullYear() &&
-        	  date.getMonth() === today.getMonth() &&
-        	  date.getDate() === today.getDate() ) {
-        	 $a.addClass("ui-btn-today");
-         } else {
-        	 $a.addClass("importance-" + importance.toString());
-         }
+
+         plugin.settings.eventHandler.getImportanceOfDay(date,
+            function(importance) {
+              if ( importance > 0 ) {
+                  $a.append("<span>&bull;</span>");
+              }
+
+              if ( date.getFullYear() === today.getFullYear() &&
+                   date.getMonth() === today.getMonth() &&
+                   date.getDate() === today.getDate() ) {
+                  $a.addClass("ui-btn-today");
+              } else {
+                  $a.addClass("importance-" + importance.toString());
+              }
+         });
       }
       
       function cellClickHandler() {
@@ -211,10 +241,8 @@
          // Empty the list
          $listview.empty();
 
-         // Find events for this date
-         for ( var i = 0, event; event = plugin.settings.events[i]; i++ ) {
-            if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
-               // Append matches to list
+         plugin.settings.eventHandler.getEventsOnDay(begin, end, function(list_of_events) {
+            for(var i = 0, event; event = list_of_events[i]; i++ ) {
                var summary    = event[plugin.settings.summary],
                    beginTime  = (( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5),
                    endTime    = (( event[plugin.settings.end] < end ) ? event[plugin.settings.end] : end ).toTimeString().substr(0,5),
@@ -222,11 +250,9 @@
                    $listItem  = $("<li></li>").appendTo($listview);
                    
                plugin.settings.listItemFormatter( $listItem, timeString, summary, event );
-               
             }
-         }
-         
-         $listview.trigger('create').filter(".ui-listview").listview('refresh');
+            $listview.trigger('create').filter(".ui-listview").listview('refresh');
+         });
       });
       
       function listItemFormatter($listItem, timeString, summary, event) {
