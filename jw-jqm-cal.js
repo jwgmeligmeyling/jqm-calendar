@@ -263,7 +263,9 @@
          if (event[plugin.settings.icon]) {
             $listItem.attr('data-icon', event.icon);
          }
-         $listItem.addClass(bg);
+         if (bg) {
+            $listItem.addClass(bg);
+          }
          if (event[plugin.settings.url]) {
             $('<a></a>').text( text ).attr( 'href', event[plugin.settings.url] ).appendTo($listItem);
          } else {
