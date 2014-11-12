@@ -18,6 +18,7 @@
          begin : "begin",
          end : "end",
          summary : "summary",
+         bg: "", // as per http://stackoverflow.com/questions/18782689/how-to-change-the-background-image-on-particular-date-in-calendar-based-on-event
          icon: "icon",
          url: "url",
          // Sting to use when event is all day
@@ -122,6 +123,7 @@
                event = plugin.settings.events[i]; i++ ) {
             if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
                importance++;
+               var bg = event[plugin.settings.bg];
                if ( importance > 1 ) break;
             }
          }
@@ -244,22 +246,26 @@
          plugin.settings.eventHandler.getEventsOnDay(begin, end, function(list_of_events) {
             for(var i = 0, event; event = list_of_events[i]; i++ ) {
                var summary    = event[plugin.settings.summary],
+                   bg = event[plugin.settings.bg],
                    beginTime  = (( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5),
                    endTime    = (( event[plugin.settings.end] < end ) ? event[plugin.settings.end] : end ).toTimeString().substr(0,5),
                    timeString = beginTime + "-" + endTime,
                    $listItem  = $("<li></li>").appendTo($listview);
                    
-               plugin.settings.listItemFormatter( $listItem, timeString, summary, event );
+               plugin.settings.listItemFormatter( $listItem, timeString, summary, event,bg );
             }
             $listview.trigger('create').filter(".ui-listview").listview('refresh');
          });
       });
       
-      function listItemFormatter($listItem, timeString, summary, event) {
+      function listItemFormatter($listItem, timeString, summary, event,bg) {
          var text = ( ( timeString != "00:00-00:00" ) ? timeString : plugin.settings.allDayTimeString ) + " " + summary;
          if (event[plugin.settings.icon]) {
             $listItem.attr('data-icon', event.icon);
          }
+         if (bg) {
+            $listItem.addClass(bg);
+          }
          if (event[plugin.settings.url]) {
             $('<a></a>').text( text ).attr( 'href', event[plugin.settings.url] ).appendTo($listItem);
          } else {

@@ -37,6 +37,26 @@ $("#calendar").bind('change', function(event, date) {
    console.log(date);
 });
 ```
+for example to show a text on a day without events:
+```js
+$("#calendar").bind('change', function(event, date) {
+    // Fetch the events from the jqm-calendar object stored in the jQuery data
+    var events = $("#calendar").data("jqm-calendar").settings.events;
+    // Check if any events on this date exist
+    for ( var i = 0; i < events.length; i++ ) {
+        if ( events[i].begin.getFullYear() == date.getFullYear() && // same year?
+             events[i].begin.getMonth() == date.getMonth() &&        // same month?
+             events[i].begin.getDate() == date.getDate() ) {        // same date?
+              // There is an event!
+             $("#message").html("");
+             return false;
+        }
+    }
+    // There is no event!
+     $("#message").html('<p><strong>There is No event at '+date+' </strong></p>');
+});
+```
+(http://stackoverflow.com/questions/18850906/how-to-check-the-jqm-calendar-date-have-event-or-no-event-in-jquery-mobile)
 
 For example to show a text on a day without events:
 ```js
