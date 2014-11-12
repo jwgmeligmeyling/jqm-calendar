@@ -18,7 +18,7 @@
          begin : "begin",
          end : "end",
          summary : "summary",
-         bg: "bg", // as per http://stackoverflow.com/questions/18782689/how-to-change-the-background-image-on-particular-date-in-calendar-based-on-event
+         bg: "", // as per http://stackoverflow.com/questions/18782689/how-to-change-the-background-image-on-particular-date-in-calendar-based-on-event
          icon: "icon",
          url: "url",
          // Sting to use when event is all day
