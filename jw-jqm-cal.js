@@ -18,7 +18,7 @@
          begin : "begin",
          end : "end",
          summary : "summary",
-         bg: "", // as per http://stackoverflow.com/questions/18782689/how-to-change-the-background-image-on-particular-date-in-calendar-based-on-event
+         bg: "bg", // as per http://stackoverflow.com/questions/18782689/how-to-change-the-background-image-on-particular-date-in-calendar-based-on-event
          icon: "icon",
          url: "url",
          // Sting to use when event is all day
@@ -124,10 +124,10 @@
             if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
                importance++;
                var bg = event[plugin.settings.bg];
-               if ( importance > 1 ) break;
+               if ( importance > 1 || bg) break;
             }
          }
-         callback(importance);
+         callback(importance,bg);
       }
       
       function getEventsOnDay(begin, end, callback) {
@@ -159,7 +159,7 @@
          }
 
          plugin.settings.eventHandler.getImportanceOfDay(date,
-            function(importance) {
+            function(importance,bg) {
               if ( importance > 0 ) {
                   $a.append("<span>&bull;</span>");
               }
@@ -169,7 +169,18 @@
                    date.getDate() === today.getDate() ) {
                   $a.addClass("ui-btn-today");
               } else {
-                  $a.addClass("importance-" + importance.toString());
+		  
+		  if (bg) {/* 2014113: added bg definition based on event "bg"
+			      if bg specified in one event it will prevail on "importance-?" class
+			      Open point:
+			      There can be more than one event per day. Which one drives the color of the day?
+			      As per actual implementation it's the first event.
+			   */
+		      
+		      $a.addClass(bg);
+		  } else {
+		      $a.addClass("importance-" + importance.toString());
+		  }
               }
          });
       }
