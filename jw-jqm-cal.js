@@ -18,7 +18,7 @@
          begin : "begin",
          end : "end",
          summary : "summary",
-         bg: "bg", // as per http://stackoverflow.com/questions/18782689/how-to-change-the-background-image-on-particular-date-in-calendar-based-on-event
+         bg: "", // as per http://stackoverflow.com/questions/18782689/how-to-change-the-background-image-on-particular-date-in-calendar-based-on-event
          icon: "icon",
          url: "url",
          // Sting to use when event is all day
@@ -146,10 +146,11 @@
 
       function addCell($row, date, darker, selected) {
          var $td = $("<td class='ui-body-" + plugin.settings.theme + "'/>").appendTo($row),
-             $a = $("<a href='#' class='ui-btn ui-btn-up-" + plugin.settings.theme + "'/>")
+             $a = $("<button href='#' class='ui-btn ui-btn-up-" + plugin.settings.theme + "'/>")
                   .html(date.getDate().toString())
                   .data('date', date)
                   .click(cellClickHandler)
+		  .taphold(cellTapholdHandler)
                   .appendTo($td);
 
          if ( selected ) $a.click();
@@ -185,9 +186,24 @@
          });
       }
       
+    function cellTapholdHandler() {
+         var $this = $(this),
+	 date = $this.data('date');
+         $tbody.find("a.ui-btn-active").removeClass("ui-btn-active");
+         $this.addClass("ui-btn-active");
+         
+         if ( date.getMonth() !== plugin.settings.date.getMonth() ) {
+            // Go to previous/next month
+            refresh(date);
+         } 
+	 // Select new date
+	 $element.trigger('taphold', date);
+      }
+      
+      
       function cellClickHandler() {
          var $this = $(this),
-            date = $this.data('date');
+         date = $this.data('date');
          $tbody.find("a.ui-btn-active").removeClass("ui-btn-active");
          $this.addClass("ui-btn-active");
          
