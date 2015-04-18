@@ -33,6 +33,7 @@
          months : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
          // Array of day strings (calendar header)
          days : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+	 yearArrow : false,
          // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
          weeksInMonth : undefined,
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
@@ -66,11 +67,24 @@
             refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() - 1, plugin.settings.date.getDate()));
          }).appendTo($th);
          
+          if (plugin.settings.yearArrow) {
+	     $("<a href='#' data-role='button' data-icon='arrow-l' data-iconpos='notext' class='previous-btn'>Previous</a>").click(function() {
+		refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() - 12, plugin.settings.date.getDate()));
+	     }).appendTo($th);
+	 }
+         
          $header = $("<span/>").appendTo($th);
          
          $("<a href='#' data-role='button' data-icon='arrow-r' data-iconpos='notext' class='next-btn'>Next</a>").click(function() {
             refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() + 1, plugin.settings.date.getDate()));
          }).appendTo($th);
+         
+ 	 if (plugin.settings.yearArrow) {
+	      $("<a href='#' data-role='button' data-icon='arrow-r' data-iconpos='notext' class='next-btn'>Next</a>").click(function() {
+		refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() + 12, plugin.settings.date.getDate()));
+	     }).appendTo($th);
+	 }
+         
          
          $th.appendTo($tr);
          
