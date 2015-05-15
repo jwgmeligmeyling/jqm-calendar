@@ -92,7 +92,7 @@
          
          // The way of determing the labels for the days is a bit awkward, but works.
          for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
-            $tr.append("<th class='ui-bar-" + plugin.settings.theme + "'><span class='darker'>"  + days[i] + "</span></th>");
+            $tr.append("<th class='ui-bar-" + plugin.settings.theme + "'><span id='nameday"+i+"' class='darker'>"  + days[i] + "</span></th>"); //lp20150515
          }
          
          $tbody = $("<tbody/>").appendTo($table);
@@ -274,6 +274,11 @@
                daysInWeekCount++;
                daysAfterCount++;
             }
+         }
+         
+         //lp20150515
+         for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
+	    document.getElementById('nameday'+i).innerHTML=days[i];
          }
          
          $element.trigger('create');
