@@ -33,6 +33,7 @@
          months : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
          // Array of day strings (calendar header)
          days : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+	 yearArrow : false,
          // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
          weeksInMonth : undefined,
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
@@ -66,11 +67,24 @@
             refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() - 1, plugin.settings.date.getDate()));
          }).appendTo($th);
          
+          if (plugin.settings.yearArrow) {
+	     $("<a href='#' data-role='button' data-icon='arrow-l' data-iconpos='notext' class='previous-btn'>Previous</a>").click(function() {
+		refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() - 12, plugin.settings.date.getDate()));
+	     }).appendTo($th);
+	 }
+         
          $header = $("<span/>").appendTo($th);
          
          $("<a href='#' data-role='button' data-icon='arrow-r' data-iconpos='notext' class='next-btn'>Next</a>").click(function() {
             refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() + 1, plugin.settings.date.getDate()));
          }).appendTo($th);
+         
+ 	 if (plugin.settings.yearArrow) {
+	      $("<a href='#' data-role='button' data-icon='arrow-r' data-iconpos='notext' class='next-btn'>Next</a>").click(function() {
+		refresh(new Date(plugin.settings.date.getFullYear(), plugin.settings.date.getMonth() + 12, plugin.settings.date.getDate()));
+	     }).appendTo($th);
+	 }
+         
          
          $th.appendTo($tr);
          
@@ -78,7 +92,7 @@
          
          // The way of determing the labels for the days is a bit awkward, but works.
          for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
-            $tr.append("<th class='ui-bar-" + plugin.settings.theme + "'><span class='darker'>"  + days[i] + "</span></th>");
+            $tr.append("<th class='ui-bar-" + plugin.settings.theme + "'><span id='nameday"+i+"' class='darker'>"  + days[i] + "</span></th>"); //lp20150515
          }
          
          $tbody = $("<tbody/>").appendTo($table);
@@ -124,10 +138,10 @@
             if ( event[plugin.settings.end] >= begin && event[plugin.settings.begin] < end ) {
                importance++;
                var bg = event[plugin.settings.bg];
-               if ( importance > 1 ) break;
+               if ( importance > 1 || bg) break;
             }
          }
-         callback(importance);
+         callback(importance,bg);
       }
       
       function getEventsOnDay(begin, end, callback) {
@@ -146,10 +160,11 @@
 
       function addCell($row, date, darker, selected) {
          var $td = $("<td class='ui-body-" + plugin.settings.theme + "'/>").appendTo($row),
-             $a = $("<a href='#' class='ui-btn ui-btn-up-" + plugin.settings.theme + "'/>")
+             $a = $("<button href='#' class='ui-btn ui-btn-up-" + plugin.settings.theme + "'/>")
                   .html(date.getDate().toString())
                   .data('date', date)
                   .click(cellClickHandler)
+		  .taphold(cellTapholdHandler)
                   .appendTo($td);
 
          if ( selected ) $a.click();
@@ -159,7 +174,7 @@
          }
 
          plugin.settings.eventHandler.getImportanceOfDay(date,
-            function(importance) {
+            function(importance,bg) {
               if ( importance > 0 ) {
                   $a.append("<span>&bull;</span>");
               }
@@ -169,14 +184,40 @@
                    date.getDate() === today.getDate() ) {
                   $a.addClass("ui-btn-today");
               } else {
-                  $a.addClass("importance-" + importance.toString());
+		  
+		  if (bg) {/* 2014113: added bg definition based on event "bg"
+			      if bg specified in one event it will prevail on "importance-?" class
+			      Open point:
+			      There can be more than one event per day. Which one drives the color of the day?
+			      As per actual implementation it's the first event.
+			   */
+		      
+		      $a.addClass(bg);
+		  } else {
+		      $a.addClass("importance-" + importance.toString());
+		  }
               }
          });
       }
       
+    function cellTapholdHandler() {
+         var $this = $(this),
+	 date = $this.data('date');
+         $tbody.find("a.ui-btn-active").removeClass("ui-btn-active");
+         $this.addClass("ui-btn-active");
+         
+         if ( date.getMonth() !== plugin.settings.date.getMonth() ) {
+            // Go to previous/next month
+            refresh(date);
+         } 
+	 // Select new date
+	 $element.trigger('taphold', date);
+      }
+      
+      
       function cellClickHandler() {
          var $this = $(this),
-            date = $this.data('date');
+         date = $this.data('date');
          $tbody.find("a.ui-btn-active").removeClass("ui-btn-active");
          $this.addClass("ui-btn-active");
          
@@ -233,6 +274,11 @@
                daysInWeekCount++;
                daysAfterCount++;
             }
+         }
+         
+         //lp20150515
+         for ( var i = 0, days = [].concat(plugin.settings.days, plugin.settings.days).splice(plugin.settings.startOfWeek, 7); i < 7; i++ ) {
+	    document.getElementById('nameday'+i).innerHTML=days[i];
          }
          
          $element.trigger('create');
