@@ -67,4 +67,4 @@ $("#calendar").trigger('refresh', new Date("2013-01-01"));
 ```
 
 
-bg parameter can be used to change the color of the event in the event list
+`bg` parameter can be used to change the color of the event in the event list
