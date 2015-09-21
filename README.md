@@ -10,6 +10,7 @@ The options Object for the jqmCaldender takes several attributes, all of which a
 * `days` : Same as for months
 * `startOfWeek` : integer from 0 to 6 to tell jqm-calendar at which day to start painting the week (eg. sunday)
 * `weeksInMonth` : How many weeks to show in a month. Normally this varies between 4 and 6, depending on the given start of the week and the start of the month. You can fix the amount of weeks by setting this attribute. Additional days will be filled with dates from the month before and after.
+* `yearArrow` : if true it shows arrows to go to previous and next year
 
 Some example that sets some attributes:
 
@@ -64,3 +65,6 @@ $("#calendar").trigger('refresh');
 // or :
 $("#calendar").trigger('refresh', new Date("2013-01-01"));
 ```
+
+
+bg parameter can be used to change the color of the event in the event list
