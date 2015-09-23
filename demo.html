@@ -3,13 +3,13 @@
 <head> 
 <title>My Page</title> 
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <link rel="stylesheet" href="jw-jqm-cal.css" />
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-<script type="text/javascript" src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 <script type="text/javascript" src="jw-jqm-cal.js"></script>
 <script type="text/javascript">
-$("#view-calendar").live('pageinit', function(event, ui) {
+ $(document).on("pageinit", "#view-calendar", function () { 
    $("#calendar").jqmCalendar({
       events : [ { "summary" : "Test event", "begin" : new Date("2013-02-05 00:00:00"), "end" : new Date("2013-02-07 00:00:00") }, { "summary" : "Test event", "begin" : new Date(), "end" : new Date() }, { "summary" : "Test event", "begin" : new Date(), "end" : new Date() } ],
       months : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
