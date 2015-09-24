@@ -35,7 +35,8 @@
          // Array of day strings (calendar header)
          days : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
 	 yearArrow : false,
-         // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
+	 disableDates : 0, //0 none, -1 past, +1 future
+          // Most months contain 5 weeks, some 6. Set this to six if you don't want the amount of rows to change when switching months.
          weeksInMonth : undefined,
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
          startOfWeek : 0,
@@ -54,7 +55,7 @@
           $listview;
 
       function init() {
-         plugin.settings = $.extend({}, defaults, options);
+         plugin.settings = $.extend(true, defaults, options); //it was: plugin.settings = $.extend({}, defaults, options);
          plugin.settings.theme = $.mobile.getInheritedTheme($element, plugin.settings.theme);
          
          $table = $("<table/>");
@@ -184,6 +185,10 @@
          if ( darker ) {
              $td.addClass("darker");
          }
+         
+         if ( isDisabled(date) ) { //test
+             $a.attr("disabled", true);
+         }
 
          plugin.settings.eventHandler.getImportanceOfDay(date,
             function(importance,bg) {
@@ -245,6 +250,23 @@
          }
          plugin.settings.date = date ;
       }
+      
+      function isDisabled(date){
+                if ( (plugin.settings.disableDates==-1 && dateOnly(date) < dateOnly(new Date())) || (plugin.settings.disableDates==1 && dateOnly(date) > dateOnly(new Date()) ) ) {
+          return true;
+        }
+        return false;
+      }
+      
+      function dateOnly(date) {
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        var resultDate= "" + year + month + day;
+        return parseInt(resultDate,10);
+      }
+      
+      
       
       function refresh(date) {
          plugin.settings.date = date = date ||  plugin.settings.date || new Date();
