@@ -55,7 +55,7 @@
           $listview;
 
       function init() {
-         plugin.settings = $.extend(true, defaults, options); //it was: plugin.settings = $.extend({}, defaults, options);
+         plugin.settings = $.extend({}, defaults, options);
          plugin.settings.theme = $.mobile.getInheritedTheme($element, plugin.settings.theme);
          
          $table = $("<table/>");
