@@ -186,9 +186,7 @@
              $td.addClass("darker");
          }
          
-         if ( isDisabled(date) ) { //test
-             $a.attr("disabled", true);
-         }
+         $a.attr("disabled", isDisabled(date));
 
          plugin.settings.eventHandler.getImportanceOfDay(date,
             function(importance,bg) {
@@ -259,13 +257,18 @@
       }
       
       function dateOnly(date) {
-        var day = date.getDate();
-        var month = date.getMonth() + 1;
+        var day = padd(date.getDate(),2);
+        var month = padd(date.getMonth() + 1,2);
         var year = date.getFullYear();
         var resultDate= "" + year + month + day;
         return parseInt(resultDate,10);
       }
       
+      function padd(n, width, z) {
+        z = z || '0';
+        n = n + '';
+        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+      }
       
       
       function refresh(date) {
