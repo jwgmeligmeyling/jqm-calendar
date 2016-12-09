@@ -41,6 +41,9 @@
          // Start the week at the day of your preference, 0 for sunday, 1 for monday, and so on.
          startOfWeek : 0,
          // List Item formatter, allows a callback to be passed to alter the contect of the list item
+         ampm : 0,  //lp 20161204 '0' give the output in 24h, '1' gives the outpoot in 12h am/pm
+         suffixam: 'am',
+         suffixpm: 'pm',
          listItemFormatter : listItemFormatter
       };
 
@@ -55,6 +58,7 @@
           $listview;
 
       function init() {
+         //plugin.settings = $.extend(true, defaults, options); //it was: 
          plugin.settings = $.extend({}, defaults, options);
          plugin.settings.theme = $.mobile.getInheritedTheme($element, plugin.settings.theme);
          
@@ -333,11 +337,39 @@
 
          plugin.settings.eventHandler.getEventsOnDay(begin, end, function(list_of_events) {
             for(var i = 0, event; event = list_of_events[i]; i++ ) {
+               //lp 20161204
+               var suffixBegin="";
+               var suffixEnd="";
+               tempBeginTime=(( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5);
+               tempEndTime=(( event[plugin.settings.end] < end ) ? event[plugin.settings.end] : end ).toTimeString().substr(0,5);
+               if (plugin.settings.ampm==1) {
+                   //begin
+                   suffixBegin=plugin.settings.suffixam;
+                   var hourBegin=tempBeginTime.substr(0,2);
+                   if (hourBegin==12) {suffixBegin=plugin.settings.suffixpm};
+                   if (hourBegin>12) {
+                       hourBegin=hourBegin-12;
+                       if (hourBegin.toString().length<2) hourBegin="0"+hourBegin;
+                       suffixBegin=plugin.settings.suffixpm;
+                   }
+                   tempBeginTime=hourBegin+tempBeginTime.substr(2,5)+suffixBegin;
+                   //end
+                   suffixEnd=plugin.settings.suffixam;
+                   var hourEnd=tempEndTime.substr(0,2);
+                   if (hourEnd==12) {suffixEnd=plugin.settings.suffixpm};
+                   if (hourEnd>12) {
+                       hourEnd=hourEnd-12;
+                       if (hourEnd.toString().length<2) hourEnd="0"+hourEnd;
+                       suffixEnd=plugin.settings.suffixpm;
+                   }
+                   tempEndTime=hourEnd+tempEndTime.substr(2,5)+suffixEnd;
+               }
+               //////////////
                var summary    = event[plugin.settings.summary],
                    bg = event[plugin.settings.bg],
 		   itemIndex = event[plugin.settings.itemIndex],
-                   beginTime  = (( event[plugin.settings.begin] > begin ) ? event[plugin.settings.begin] : begin ).toTimeString().substr(0,5),
-                   endTime    = (( event[plugin.settings.end] < end ) ? event[plugin.settings.end] : end ).toTimeString().substr(0,5),
+                   beginTime  = tempBeginTime,   //lp 20161204
+                   endTime    = tempEndTime,     //lp 20161204
                    timeString = beginTime + "-" + endTime,
                    $listItem  = $("<li></li>").appendTo($listview);
                plugin.settings.listItemFormatter( $listItem, timeString, summary, event );
